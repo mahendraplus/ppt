@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Slide 23 - Sample Security Report</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            background-color: #0B1120;
+        }
+        .font-heading {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Grid Pattern */
+        .bg-grid {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231e293b' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        /* Paper Sheet Effect */
+        .report-sheet {
+            background-color: #FFFFFF;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        
+        /* Custom Scrollbar for Report Body */
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 3px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        /* Status Pills */
+        .pill-high {
+            background-color: #FEF2F2;
+            color: #DC2626;
+            border: 1px solid #FECACA;
+        }
+        .pill-medium {
+            background-color: #FFFBEB;
+            color: #D97706;
+            border: 1px solid #FDE68A;
+        }
+        .pill-low {
+            background-color: #EFF6FF;
+            color: #2563EB;
+            border: 1px solid #BFDBFE;
+        }
+
+        /* Tech Overlay */
+        .tech-overlay {
+            background-color: rgba(11, 17, 32, 0.85);
+            backdrop-filter: blur(4px);
+        }
+    </style>
+</head>
+<body class="w-[1280px] h-[720px] text-white bg-grid relative flex flex-col">
+<!-- Background Decor -->
+<div class="absolute top-0 right-0 w-1/3 h-full bg-blue-900 opacity-10 z-0"></div>
+<div class="absolute bottom-0 left-0 w-1/3 h-full bg-green-900 opacity-10 z-0"></div>
+<!-- Header Area -->
+<header class="relative z-10 px-16 pt-10 pb-4 flex justify-between items-end border-b border-gray-800 bg-opacity-90 bg-[#0B1120]">
+<div>
+<div class="flex items-center space-x-2 mb-2">
+<span class="w-2 h-2 bg-green-500 rounded-full"></span>
+<p class="text-green-400 text-xs font-mono uppercase tracking-widest">Audit Output</p>
+</div>
+<h1 class="text-3xl font-heading font-bold text-white">Sample Security Report</h1>
+</div>
+<div class="text-right">
+<p class="text-gray-500 font-mono text-sm">SPCE / MCA / SEM-IV</p>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="relative z-10 flex flex-1 px-16 py-8 gap-12 overflow-hidden items-center">
+<!-- Left Side: Context & Explanation -->
+<div class="w-1/3 flex flex-col justify-center space-y-8">
+<div>
+<h2 class="text-2xl font-bold text-white mb-4 font-heading">Generated Findings</h2>
+<p class="text-gray-400 leading-relaxed text-sm">
+                    The automated reporting module consolidates scan results into actionable documents. Each finding includes severity classification based on CVSS scores, evidence of the vulnerability, and specific remediation steps for developers.
+                </p>
+</div>
+<!-- Key Metrics Mini Cards -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-gray-800 bg-opacity-50 border border-gray-700 p-4 rounded-lg">
+<p class="text-xs text-gray-500 uppercase mb-1">Total Vulns</p>
+<p class="text-2xl font-bold text-white font-mono">12</p>
+</div>
+<div class="bg-gray-800 bg-opacity-50 border border-gray-700 p-4 rounded-lg">
+<p class="text-xs text-gray-500 uppercase mb-1">Criticality</p>
+<p class="text-2xl font-bold text-red-500 font-mono">High</p>
+</div>
+</div>
+<div class="bg-blue-900 bg-opacity-20 border-l-4 border-blue-500 p-4 rounded-r-lg">
+<div class="flex items-start">
+<i class="fas fa-info-circle text-blue-400 mt-1 mr-3"></i>
+<div>
+<p class="text-sm text-blue-100 font-medium mb-1">Report Format</p>
+<p class="text-xs text-blue-300">
+                            Reports are generated in PDF and HTML formats, compliant with OWASP Top 10 reporting standards.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Side: The Report Preview (Paper Metaphor) -->
+<div class="w-2/3 h-full relative perspective-1000 group">
+<!-- Decorative Back Sheet -->
+<div class="absolute top-2 left-2 w-full h-full bg-gray-200 rounded-lg transform rotate-1 opacity-20"></div>
+<!-- Main Report Sheet -->
+<div class="report-sheet w-full h-full rounded-lg text-gray-800 overflow-hidden flex flex-col relative transform transition-transform duration-500 group-hover:-translate-y-1">
+<!-- Report Header (Inside Paper) -->
+<div class="bg-gray-50 border-b border-gray-200 p-6 flex justify-between items-start">
+<div>
+<div class="flex items-center space-x-2 text-gray-500 mb-1">
+<i class="fas fa-shield-alt"></i>
+<span class="text-xs font-bold uppercase tracking-wider">Confidential Audit Report</span>
+</div>
+<h3 class="text-2xl font-bold text-gray-900 font-heading">Vulnerability Assessment</h3>
+<p class="text-sm text-gray-500 mt-1">Ref: #AUDIT-2026-005</p>
+</div>
+<div class="text-right">
+<div class="bg-gray-100 px-3 py-2 rounded border border-gray-200 mb-2">
+<p class="text-xs text-gray-500 uppercase">Target Host</p>
+<p class="text-sm font-mono font-bold text-gray-800">demo.testfire.net</p>
+</div>
+<p class="text-xs text-gray-400">Date: 15 Feb 2026</p>
+</div>
+</div>
+<!-- Report Body -->
+<div class="p-6 overflow-y-auto custom-scroll flex-1 bg-white">
+<h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 border-b border-gray-100 pb-2">Detailed Findings</h4>
+<!-- Finding 1 -->
+<div class="mb-6 border border-gray-200 rounded-lg overflow-hidden">
+<div class="bg-gray-50 p-3 border-b border-gray-200 flex justify-between items-center">
+<div class="flex items-center">
+<span class="pill-high text-xs font-bold px-2 py-1 rounded mr-3 uppercase tracking-wide">High</span>
+<p class="font-bold text-gray-800 text-sm">SQL Injection (Blind)</p>
+</div>
+<span class="text-xs font-mono text-gray-500">CVSS: 8.5</span>
+</div>
+<div class="p-4">
+<div class="grid grid-cols-4 gap-4 mb-3">
+<div class="col-span-1 text-xs font-bold text-gray-500 uppercase">Description</div>
+<div class="col-span-3 text-sm text-gray-700">
+                                    The application's login parameter is vulnerable to blind SQL injection, allowing attackers to manipulate database queries.
+                                </div>
+</div>
+<div class="grid grid-cols-4 gap-4">
+<div class="col-span-1 text-xs font-bold text-green-600 uppercase">Remediation</div>
+<div class="col-span-3 text-sm text-gray-700 bg-green-50 p-2 rounded border border-green-100">
+                                    Use parameterized queries (Prepared Statements) for all database access. Validate input types rigidly.
+                                </div>
+</div>
+</div>
+</div>
+<!-- Finding 2 -->
+<div class="mb-6 border border-gray-200 rounded-lg overflow-hidden">
+<div class="bg-gray-50 p-3 border-b border-gray-200 flex justify-between items-center">
+<div class="flex items-center">
+<span class="pill-medium text-xs font-bold px-2 py-1 rounded mr-3 uppercase tracking-wide">Medium</span>
+<p class="font-bold text-gray-800 text-sm">Reflected XSS</p>
+</div>
+<span class="text-xs font-mono text-gray-500">CVSS: 6.1</span>
+</div>
+<div class="p-4">
+<div class="grid grid-cols-4 gap-4 mb-3">
+<div class="col-span-1 text-xs font-bold text-gray-500 uppercase">Description</div>
+<div class="col-span-3 text-sm text-gray-700">
+                                    Search input is reflected back to the user without proper sanitization, enabling script execution.
+                                </div>
+</div>
+<div class="grid grid-cols-4 gap-4">
+<div class="col-span-1 text-xs font-bold text-green-600 uppercase">Remediation</div>
+<div class="col-span-3 text-sm text-gray-700 bg-green-50 p-2 rounded border border-green-100">
+                                    Implement context-sensitive output encoding. Enable Content Security Policy (CSP).
+                                </div>
+</div>
+</div>
+</div>
+<!-- Finding 3 -->
+<div class="border border-gray-200 rounded-lg overflow-hidden opacity-75">
+<div class="bg-gray-50 p-3 border-b border-gray-200 flex justify-between items-center">
+<div class="flex items-center">
+<span class="pill-low text-xs font-bold px-2 py-1 rounded mr-3 uppercase tracking-wide">Medium</span>
+<p class="font-bold text-gray-800 text-sm">Open Port 22 (SSH)</p>
+</div>
+<span class="text-xs font-mono text-gray-500">CVSS: 4.3</span>
+</div>
+<div class="p-4">
+<div class="text-sm text-gray-600 italic">
+                                SSH service is exposed to the public internet. Ensure strict access control lists or VPN requirements...
+                            </div>
+</div>
+</div>
+</div>
+<!-- Footer Watermark/Stamp -->
+<div class="absolute bottom-8 right-8 pointer-events-none opacity-10 transform -rotate-12 border-4 border-red-800 rounded p-2">
+<p class="text-4xl font-black text-red-800 uppercase font-heading">Confidential</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Stripe -->
+<div class="h-1 w-full bg-gradient-to-r from-green-500 via-blue-500 to-purple-500"></div>
+</body>
+</html>

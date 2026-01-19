@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>HTML Slide Viewer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="w-screen h-screen bg-slate-900 overflow-hidden">
+
+<div id="app" class="relative w-full h-full overflow-hidden bg-black">
+
+  <iframe id="frameA" class="absolute inset-0 w-full h-full border-0 bg-black opacity-100 transition-opacity duration-500 ease-in-out"></iframe>
+  <iframe id="frameB" class="absolute inset-0 w-full h-full border-0 bg-black opacity-0 transition-opacity duration-500 ease-in-out"></iframe>
+
+  <div id="floatingBar" class="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-wrap items-center justify-center gap-1 px-2 py-1 rounded-xl bg-slate-800/70 backdrop-blur-md border border-slate-600 shadow-lg">
+
+    <button id="firstBtn" class="px-2 py-1 text-white text-xs bg-slate-700 hover:bg-slate-600 rounded">First</button>
+    <button id="prevBtn"  class="px-2 py-1 text-white text-xs bg-slate-700 hover:bg-slate-600 rounded">Prev</button>
+    <button id="playBtn"  class="px-2 py-1 text-white text-xs bg-indigo-600 hover:bg-indigo-700 rounded">Play</button>
+    <button id="nextBtn"  class="px-2 py-1 text-white text-xs bg-slate-700 hover:bg-slate-600 rounded">Next</button>
+    <button id="lastBtn"  class="px-2 py-1 text-white text-xs bg-slate-700 hover:bg-slate-600 rounded">Last</button>
+
+    <button id="reloadBtn" class="px-2 py-1 text-white text-xs bg-slate-700 hover:bg-slate-600 rounded">Reload</button>
+    <button id="resetBtn"  class="px-2 py-1 text-white text-xs bg-red-600 hover:bg-red-700 rounded">Reset</button>
+
+    <input id="speedRange" type="range" min="1000" max="8000" step="500" value="3000" class="w-20 accent-indigo-500" />
+    <input id="scaleRange" type="range" min="70" max="140" step="5" value="100" class="w-16 accent-indigo-500" />
+
+    <button id="fsBtn" class="px-2 py-1 text-white text-xs bg-slate-700 hover:bg-slate-600 rounded">Full</button>
+
+    <div id="counter" class="text-white text-xs min-w-[50px] text-center">0 / 0</div>
+
+  </div>
+
+</div>
+
+<script>
+const basePath = "/assets/html/";
+let currentIndex = 1;
+let totalSlides = 0;
+let isPlaying = false;
+let intervalId = null;
+
+const frameA = document.getElementById("frameA");
+const frameB = document.getElementById("frameB");
+let activeFrame = frameA;
+let bufferFrame = frameB;
+
+const firstBtn = document.getElementById("firstBtn");
+const prevBtn  = document.getElementById("prevBtn");
+const nextBtn  = document.getElementById("nextBtn");
+const lastBtn  = document.getElementById("lastBtn");
+const playBtn  = document.getElementById("playBtn");
+const reloadBtn = document.getElementById("reloadBtn");
+const resetBtn  = document.getElementById("resetBtn");
+
+const speedRange = document.getElementById("speedRange");
+const scaleRange = document.getElementById("scaleRange");
+const fsBtn = document.getElementById("fsBtn");
+const counter = document.getElementById("counter");
+const app = document.getElementById("app");
+const floatingBar = document.getElementById("floatingBar");
+
+const preloaded = {};
+
+function slideUrl(i) {
+  return basePath + i + ".html";
+}
+
+async function detectSlides() {
+  let i = 1;
+  while (true) {
+    try {
+      const r = await fetch(slideUrl(i), { method: "HEAD" });
+      if (!r.ok) break;
+      i++;
+    } catch {
+      break;
+    }
+  }
+  totalSlides = i - 1;
+  counter.textContent = currentIndex + " / " + totalSlides;
+}
+
+function preloadNextSlides() {
+  for (let i = 1; i <= 3; i++) {
+    const idx = currentIndex + i;
+    if (idx <= totalSlides && !preloaded[idx]) {
+      const link = document.createElement("link");
+      link.rel = "prefetch";
+      link.href = slideUrl(idx);
+      document.head.appendChild(link);
+      preloaded[idx] = true;
+    }
+  }
+}
+
+function shadeSwap() {
+  bufferFrame.classList.remove("opacity-0");
+  bufferFrame.classList.add("opacity-100");
+
+  activeFrame.classList.remove("opacity-100");
+  activeFrame.classList.add("opacity-0");
+
+  setTimeout(() => {
+    const tmp = activeFrame;
+    activeFrame = bufferFrame;
+    bufferFrame = tmp;
+  }, 500);
+}
+
+function loadSlide(index) {
+  if (index < 1 || index > totalSlides) return;
+  bufferFrame.onload = () => {
+    shadeSwap();
+    counter.textContent = currentIndex + " / " + totalSlides;
+    preloadNextSlides();
+  };
+  bufferFrame.src = slideUrl(index);
+}
+
+function nextSlide() {
+  if (currentIndex >= totalSlides) {
+    stopAuto();
+    return;
+  }
+  currentIndex++;
+  loadSlide(currentIndex);
+}
+
+function prevSlide() {
+  if (currentIndex <= 1) return;
+  currentIndex--;
+  loadSlide(currentIndex);
+}
+
+function firstSlide() {
+  currentIndex = 1;
+  loadSlide(currentIndex);
+}
+
+function lastSlide() {
+  currentIndex = totalSlides;
+  loadSlide(currentIndex);
+}
+
+function reloadSlide() {
+  activeFrame.src = slideUrl(currentIndex) + "?t=" + Date.now();
+}
+
+function resetSettings() {
+  stopAuto();
+  speedRange.value = 3000;
+  scaleRange.value = 100;
+  activeFrame.style.transform = "scale(1)";
+  bufferFrame.style.transform = "scale(1)";
+}
+
+function startAuto() {
+  if (isPlaying) return;
+  isPlaying = true;
+  playBtn.textContent = "Pause";
+  intervalId = setInterval(nextSlide, Number(speedRange.value));
+}
+
+function stopAuto() {
+  isPlaying = false;
+  playBtn.textContent = "Play";
+  clearInterval(intervalId);
+}
+
+firstBtn.onclick  = firstSlide;
+prevBtn.onclick   = prevSlide;
+nextBtn.onclick   = nextSlide;
+lastBtn.onclick   = lastSlide;
+reloadBtn.onclick = reloadSlide;
+resetBtn.onclick  = resetSettings;
+
+playBtn.onclick = () => {
+  if (isPlaying) stopAuto();
+  else startAuto();
+};
+
+speedRange.onchange = () => {
+  if (isPlaying) {
+    stopAuto();
+    startAuto();
+  }
+};
+
+scaleRange.oninput = () => {
+  const s = scaleRange.value / 100;
+  activeFrame.style.transform = `scale(${s})`;
+  bufferFrame.style.transform = `scale(${s})`;
+};
+
+fsBtn.onclick = () => {
+  if (!document.fullscreenElement) {
+    app.requestFullscreen();
+    floatingBar.classList.add("hidden");
+  } else {
+    document.exitFullscreen();
+  }
+};
+
+document.addEventListener("fullscreenchange", () => {
+  if (!document.fullscreenElement) {
+    floatingBar.classList.remove("hidden");
+  }
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowRight") nextSlide();
+  if (e.key === "ArrowLeft") prevSlide();
+  if (e.key === " ") {
+    e.preventDefault();
+    if (isPlaying) stopAuto();
+    else startAuto();
+  }
+  if (e.key.toLowerCase() === "r") reloadSlide();
+  if (e.key.toLowerCase() === "f") fsBtn.click();
+  if (e.key.toLowerCase() === "h") firstSlide();
+  if (e.key.toLowerCase() === "e") lastSlide();
+});
+
+(async function init() {
+  await detectSlides();
+  activeFrame.src = slideUrl(currentIndex);
+  preloadNextSlides();
+})();
+</script>
+
+</body>
+</html>

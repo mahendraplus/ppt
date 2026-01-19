@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Slide 12 - System Architecture</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            background-color: #0B1120;
+        }
+        .font-heading {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Grid Pattern */
+        .bg-grid {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231e293b' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        /* Diagram Box Styling */
+        .diag-box {
+            background-color: rgba(30, 41, 59, 0.8);
+            border: 2px solid rgba(71, 85, 105, 0.6);
+            backdrop-filter: blur(4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.75rem;
+            z-index: 20;
+        }
+        .diag-box:hover {
+            border-color: rgba(16, 185, 129, 0.5);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        /* Component Specific Colors */
+        .box-user { border-color: rgba(59, 130, 246, 0.5); }
+        .box-web { border-color: rgba(16, 185, 129, 0.5); }
+        .box-server { border-color: rgba(139, 92, 246, 0.5); }
+        .box-db { border-color: rgba(245, 158, 11, 0.5); }
+        .box-tools { border-color: rgba(239, 68, 68, 0.5); }
+        .box-report { border-color: rgba(14, 165, 233, 0.5); }
+
+        /* Connection Lines (SVG) */
+        .connections-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        /* Dashed container for layers */
+        .layer-container {
+            position: absolute;
+            border: 1px dashed rgba(148, 163, 184, 0.2);
+            background-color: rgba(15, 23, 42, 0.3);
+            border-radius: 1rem;
+            z-index: 5;
+        }
+        .layer-label {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background-color: #0B1120;
+            padding: 0 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Flow Animation */
+        @keyframes flowPulse {
+            0% { stroke-dashoffset: 20; opacity: 0.4; }
+            50% { opacity: 1; }
+            100% { stroke-dashoffset: 0; opacity: 0.4; }
+        }
+        .flow-line {
+            stroke-dasharray: 5;
+            animation: flowPulse 2s linear infinite;
+        }
+    </style>
+</head>
+<body class="w-[1280px] h-[720px] text-white bg-grid relative flex flex-col">
+<!-- Header Area -->
+<header class="relative z-30 px-16 pt-12 pb-4 flex justify-between items-end border-b border-gray-800 bg-opacity-90 bg-[#0B1120]">
+<div>
+<div class="flex items-center space-x-2 mb-2">
+<span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+<p class="text-blue-400 text-xs font-mono uppercase tracking-widest">Architecture</p>
+</div>
+<h1 class="text-4xl font-heading font-bold text-white">System Architecture</h1>
+</div>
+<div class="text-right">
+<p class="text-gray-500 font-mono text-sm">3-Tier Web Architecture</p>
+</div>
+</header>
+<!-- Main Content / Diagram Area -->
+<main class="relative z-10 flex flex-1 w-full h-full overflow-hidden bg-[#0B1120]">
+<!-- SVG Connections Layer -->
+<svg class="connections-layer">
+<defs>
+<marker id="arrowhead" markerheight="7" markerwidth="10" orient="auto" refx="9" refy="3.5">
+<polygon fill="#64748b" points="0 0, 10 3.5, 0 7"></polygon>
+</marker>
+<marker id="arrowhead-active" markerheight="7" markerwidth="10" orient="auto" refx="9" refy="3.5">
+<polygon fill="#3b82f6" points="0 0, 10 3.5, 0 7"></polygon>
+</marker>
+</defs>
+<!-- User to Web UI -->
+<path d="M220 360 L340 360" marker-end="url(#arrowhead)" stroke="#64748b" stroke-width="2"></path>
+<!-- Web UI to Flask Server -->
+<path d="M540 360 L660 360" marker-end="url(#arrowhead)" stroke="#64748b" stroke-width="2"></path>
+<!-- Flask to DB (Down) -->
+<path d="M760 420 L760 520" marker-end="url(#arrowhead)" stroke="#64748b" stroke-width="2"></path>
+<!-- Flask to Tools (Right) -->
+<path class="flow-line" d="M860 360 L960 360" marker-end="url(#arrowhead-active)" stroke="#64748b" stroke-width="2" style="stroke: #3b82f6;"></path>
+<!-- Tools to Target (Right - Implicit) -->
+<path d="M1160 360 L1220 360" stroke="#64748b" stroke-dasharray="4" stroke-width="2"></path>
+<!-- Report Gen from DB (Right) -->
+<path d="M860 560 L960 560" marker-end="url(#arrowhead)" stroke="#64748b" stroke-width="2"></path>
+</svg>
+<!-- Diagram Container -->
+<div class="relative w-full h-full">
+<!-- Layer: Client Side -->
+<div class="layer-container" style="top: 100px; left: 40px; width: 220px; height: 500px;">
+<div class="layer-label">Presentation Layer</div>
+</div>
+<!-- Layer: Application Side -->
+<div class="layer-container" style="top: 100px; left: 300px; width: 600px; height: 500px;">
+<div class="layer-label">Application Logic</div>
+</div>
+<!-- Layer: Data & Tools -->
+<div class="layer-container" style="top: 100px; left: 940px; width: 300px; height: 500px;">
+<div class="layer-label">Data &amp; Execution</div>
+</div>
+<!-- Component: User / Browser -->
+<div class="diag-box box-user" style="top: 300px; left: 60px; width: 160px; height: 120px;">
+<div class="w-12 h-12 mb-3 bg-blue-900 bg-opacity-30 rounded-full flex items-center justify-center">
+<i class="fas fa-user text-2xl text-blue-400"></i>
+</div>
+<h3 class="text-white font-bold text-sm">User</h3>
+<p class="text-blue-200 text-xs mt-1">Web Browser</p>
+</div>
+<!-- Component: Web UI -->
+<div class="diag-box box-web" style="top: 300px; left: 340px; width: 200px; height: 120px;">
+<div class="w-12 h-12 mb-3 bg-green-900 bg-opacity-30 rounded-lg flex items-center justify-center">
+<i class="fas fa-desktop text-2xl text-green-400"></i>
+</div>
+<h3 class="text-white font-bold text-sm">Web Dashboard</h3>
+<p class="text-green-200 text-xs mt-1">HTML / JS / CSS</p>
+</div>
+<!-- Component: Flask Server -->
+<div class="diag-box box-server" style="top: 280px; left: 660px; width: 200px; height: 160px;">
+<div class="w-12 h-12 mb-3 bg-purple-900 bg-opacity-30 rounded-lg flex items-center justify-center">
+<i class="fab fa-python text-2xl text-purple-400"></i>
+</div>
+<h3 class="text-white font-bold text-sm">Flask Server</h3>
+<p class="text-purple-200 text-xs mt-1">Controller Logic</p>
+<div class="mt-2 flex space-x-2">
+<span class="px-1.5 py-0.5 bg-gray-700 text-[10px] rounded text-gray-300">Auth</span>
+<span class="px-1.5 py-0.5 bg-gray-700 text-[10px] rounded text-gray-300">API</span>
+</div>
+</div>
+<!-- Component: Security Tools Engine -->
+<div class="diag-box box-tools" style="top: 250px; left: 960px; width: 220px; height: 180px;">
+<div class="w-12 h-12 mb-3 bg-red-900 bg-opacity-30 rounded-lg flex items-center justify-center">
+<i class="fas fa-bug text-2xl text-red-400"></i>
+</div>
+<h3 class="text-white font-bold text-sm">Security Engine</h3>
+<div class="grid grid-cols-2 gap-2 mt-2 w-full px-4">
+<div class="bg-gray-800 text-center py-1 text-[10px] rounded text-gray-300 border border-gray-600">Nmap</div>
+<div class="bg-gray-800 text-center py-1 text-[10px] rounded text-gray-300 border border-gray-600">OWASP ZAP</div>
+<div class="bg-gray-800 text-center py-1 text-[10px] rounded text-gray-300 border border-gray-600">Burp Suite</div>
+<div class="bg-gray-800 text-center py-1 text-[10px] rounded text-gray-300 border border-gray-600">Wireshark</div>
+</div>
+</div>
+<!-- Component: Database -->
+<div class="diag-box box-db" style="top: 520px; left: 660px; width: 200px; height: 80px;">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 bg-yellow-900 bg-opacity-30 rounded-lg flex items-center justify-center">
+<i class="fas fa-database text-lg text-yellow-400"></i>
+</div>
+<div class="text-left">
+<h3 class="text-white font-bold text-sm">MySQL DB</h3>
+<p class="text-yellow-200 text-[10px]">Findings Store</p>
+</div>
+</div>
+</div>
+<!-- Component: Report Generator -->
+<div class="diag-box box-report" style="top: 520px; left: 960px; width: 220px; height: 80px;">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 bg-sky-900 bg-opacity-30 rounded-lg flex items-center justify-center">
+<i class="fas fa-file-pdf text-lg text-sky-400"></i>
+</div>
+<div class="text-left">
+<h3 class="text-white font-bold text-sm">Report Gen</h3>
+<p class="text-sky-200 text-[10px]">PDF / HTML Output</p>
+</div>
+</div>
+</div>
+<!-- Legend/Notes -->
+<div class="absolute bottom-6 right-6 p-4 bg-gray-900 bg-opacity-80 border border-gray-700 rounded-lg w-64">
+<h4 class="text-gray-400 text-xs font-bold uppercase mb-2">Legend</h4>
+<div class="space-y-2">
+<div class="flex items-center">
+<span class="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
+<p class="text-gray-300 text-xs">Request Flow</p>
+</div>
+<div class="flex items-center">
+<span class="w-3 h-3 bg-red-500 rounded-full mr-2"></span>
+<p class="text-gray-300 text-xs">Security Scan Execution</p>
+</div>
+<div class="flex items-center">
+<span class="w-3 h-3 border border-gray-500 border-dashed rounded-full mr-2"></span>
+<p class="text-gray-300 text-xs">External Target</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Stripe -->
+<div class="h-1 w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
+</body>
+</html>

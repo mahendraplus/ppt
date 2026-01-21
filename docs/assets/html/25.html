@@ -1,134 +1,185 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Slide 25 - Limitations</title>
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
 <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            overflow: hidden;
-            background-color: #0B1120;
-        }
-        .font-heading {
-            font-family: 'Space Grotesk', sans-serif;
-        }
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
-        }
-        
-        /* Grid Pattern */
-        .bg-grid {
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231e293b' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        }
+    /* 1. Viewport Reset */
+    body {
+        margin: 0;
+        padding: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #050a14;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Inter', sans-serif;
+        overflow: hidden;
+    }
 
-        /* Cyber Card Styling */
-        .cyber-card {
-            background-color: rgba(30, 41, 59, 0.4);
-            border: 1px solid rgba(55, 65, 81, 0.6);
-            transition: all 0.3s ease;
-        }
-        .cyber-card:hover {
-            background-color: rgba(30, 41, 59, 0.7);
-            border-color: rgba(245, 158, 11, 0.4); /* Amber hover for limitations/warnings */
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
+    /* 2. Scaler Wrapper */
+    #scaler {
+        transform-origin: center center;
+        transition: transform 0.2s ease-out;
+    }
 
-        /* Icon Glow */
-        .icon-glow {
-            filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.3));
-        }
+    /* 3. Fixed Slide Container (1280x720) */
+    #slide-container {
+        position: relative;
+        width: 1280px;
+        height: 720px;
+        background-color: #0B1120;
+        box-shadow: 0 0 100px rgba(0,0,0,0.8);
+        overflow: hidden;
+    }
 
-        /* Number Badge */
-        .number-badge {
-            background-color: rgba(15, 23, 42, 0.8);
-            border: 1px solid rgba(75, 85, 99, 1);
-        }
-    </style>
+    .font-heading { font-family: 'Space Grotesk', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    
+    /* Grid Pattern */
+    .bg-grid {
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231e293b' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        position: absolute; inset: 0; z-index: 0;
+    }
+
+    /* Cyber Card Styling */
+    .cyber-card {
+        background-color: rgba(30, 41, 59, 0.4);
+        border: 1px solid rgba(55, 65, 81, 0.6);
+        transition: all 0.3s ease;
+        backdrop-filter: blur(8px);
+        display: flex;
+        flex-direction: column;
+    }
+    .cyber-card:hover {
+        background-color: rgba(30, 41, 59, 0.7);
+        border-color: rgba(245, 158, 11, 0.4); /* Amber hover */
+        transform: translateY(-4px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Icon Glow */
+    .icon-glow {
+        filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.3));
+    }
+
+    /* Number Badge */
+    .number-badge {
+        background-color: rgba(15, 23, 42, 0.9);
+        border: 1px solid rgba(75, 85, 99, 1);
+    }
+</style>
 </head>
-<body class="w-[1280px] h-[720px] text-white bg-grid relative flex flex-col">
-<!-- Background Decor -->
-<div class="absolute top-0 right-0 w-1/2 h-full bg-gray-900 opacity-20 transform skew-x-12 origin-top-right translate-x-32 z-0"></div>
-<div class="absolute bottom-0 left-0 w-64 h-64 bg-yellow-900 opacity-5 rounded-full filter blur-3xl z-0"></div>
-<!-- Header Area -->
-<header class="relative z-10 px-16 pt-12 pb-4 flex justify-between items-end border-b border-gray-800 bg-opacity-90 bg-[#0B1120]">
-<div>
-<div class="flex items-center space-x-2 mb-2">
-<span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
-<p class="text-yellow-400 text-xs font-mono uppercase tracking-widest">Constraints</p>
-</div>
-<h1 class="text-4xl font-heading font-bold text-white">Limitations</h1>
-</div>
-<div class="text-right">
-<p class="text-gray-500 font-mono text-sm">SPCE / MCA / SEM-IV</p>
-</div>
-</header>
-<!-- Main Content -->
-<main class="relative z-10 flex flex-col flex-1 px-16 py-10 overflow-hidden">
-<!-- Lead Intro Text -->
-<div class="max-w-4xl mb-12">
-<p class="text-xl text-gray-300 leading-relaxed font-light border-l-4 border-yellow-500 pl-6">
-                While the security audit framework is robust, certain <span class="text-white font-semibold">inherent limitations</span> exist due to the scope, methodology, and ethical considerations of the project.
-            </p>
-</div>
-<!-- Section Title -->
-<div class="flex items-center mb-8">
-<i class="fas fa-exclamation-triangle text-yellow-400 mr-3 text-xl"></i>
-<h2 class="text-2xl font-bold font-heading text-white">Project Boundaries</h2>
-<div class="h-px bg-gray-700 flex-1 ml-6"></div>
-</div>
-<!-- Cards Grid -->
-<div class="grid grid-cols-3 gap-8 flex-1">
-<!-- Card 1: Automated Only -->
-<div class="cyber-card rounded-xl p-8 relative flex flex-col">
-<div class="absolute top-4 right-4 number-badge w-8 h-8 rounded flex items-center justify-center text-gray-400 font-mono text-xs">01</div>
-<div class="mb-6 w-14 h-14 bg-purple-900 bg-opacity-20 rounded-lg flex items-center justify-center border border-purple-500 border-opacity-30">
-<i class="fas fa-robot text-2xl text-purple-400 icon-glow"></i>
-</div>
-<h3 class="text-xl font-bold text-white mb-3 font-heading">Automated Focus</h3>
-<p class="text-gray-400 text-sm leading-relaxed flex-1">
-                    The system relies on automated scanners. Complex business logic errors (e.g., payment bypass flows) cannot be detected without manual human intuition.
-                </p>
-<div class="mt-4 pt-4 border-t border-gray-700 border-opacity-50 flex items-center text-xs text-purple-400 font-mono">
-<i class="fas fa-arrow-right mr-2"></i> Logic Gaps
+<body>
+
+<div id="scaler">
+    <div id="slide-container">
+        
+        <div class="bg-grid"></div>
+        <div class="absolute top-0 right-0 w-1/2 h-full bg-gray-900 opacity-20 transform skew-x-12 origin-top-right translate-x-32 z-0"></div>
+        <div class="absolute bottom-0 left-0 w-64 h-64 bg-yellow-900 opacity-5 rounded-full filter blur-3xl z-0"></div>
+        
+        <header class="absolute top-0 left-0 w-full px-16 pt-10 pb-4 flex justify-between items-end border-b border-gray-800 bg-opacity-90 bg-[#0B1120] z-20" style="height: 120px;">
+            <div>
+                <div class="flex items-center space-x-2 mb-1">
+                    <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                    <p class="text-yellow-400 text-xs font-mono uppercase tracking-widest">Constraints</p>
                 </div>
-</div>
-<!-- Card 2: Non-Intrusive -->
-<div class="cyber-card rounded-xl p-8 relative flex flex-col">
-<div class="absolute top-4 right-4 number-badge w-8 h-8 rounded flex items-center justify-center text-gray-400 font-mono text-xs">02</div>
-<div class="mb-6 w-14 h-14 bg-green-900 bg-opacity-20 rounded-lg flex items-center justify-center border border-green-500 border-opacity-30">
-<i class="fas fa-hand-holding-medical text-2xl text-green-400 icon-glow"></i>
-</div>
-<h3 class="text-xl font-bold text-white mb-3 font-heading">Non-Intrusive</h3>
-<p class="text-gray-400 text-sm leading-relaxed flex-1">
-                    Strictly ethical boundaries meant no Denial of Service (DoS) or aggressive brute-force attacks were performed, potentially leaving stress-related bugs unfound.
+                <h1 class="text-4xl font-heading font-bold text-white">Limitations</h1>
+            </div>
+            <div class="text-right">
+                <p class="text-gray-500 font-mono text-sm">SPCE / MCA / SEM-IV</p>
+            </div>
+        </header>
+
+        <main class="absolute left-0 w-full px-16 py-8 flex flex-col z-10" style="top: 130px; bottom: 20px;">
+            
+            <div class="max-w-5xl mb-8">
+                <p class="text-lg text-gray-300 leading-relaxed font-light border-l-4 border-yellow-500 pl-6">
+                    While the security audit framework is robust, certain <span class="text-white font-semibold">inherent limitations</span> exist due to the scope, methodology, and ethical considerations of the project.
                 </p>
-<div class="mt-4 pt-4 border-t border-gray-700 border-opacity-50 flex items-center text-xs text-green-400 font-mono">
-<i class="fas fa-arrow-right mr-2"></i> Ethical Safety
+            </div>
+
+            <div class="flex items-center mb-8">
+                <i class="fas fa-exclamation-triangle text-yellow-400 mr-3 text-xl"></i>
+                <h2 class="text-xl font-bold font-heading text-white">Project Boundaries</h2>
+                <div class="h-px bg-gray-700 flex-1 ml-6"></div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-8 flex-1">
+                
+                <div class="cyber-card rounded-xl p-6 relative">
+                    <div class="absolute top-4 right-4 number-badge w-8 h-8 rounded flex items-center justify-center text-gray-400 font-mono text-xs">01</div>
+                    <div class="mb-5 w-14 h-14 bg-purple-900 bg-opacity-20 rounded-lg flex items-center justify-center border border-purple-500 border-opacity-30">
+                        <i class="fas fa-robot text-2xl text-purple-400 icon-glow"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2 font-heading">Automated Focus</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed flex-1">
+                        The system relies on automated scanners. Complex business logic errors (e.g., payment bypass flows) cannot be detected without manual human intuition.
+                    </p>
+                    <div class="mt-4 pt-3 border-t border-gray-700 border-opacity-50 flex items-center text-xs text-purple-400 font-mono">
+                        <i class="fas fa-arrow-right mr-2"></i> Logic Gaps
+                    </div>
                 </div>
-</div>
-<!-- Card 3: Snapshot -->
-<div class="cyber-card rounded-xl p-8 relative flex flex-col">
-<div class="absolute top-4 right-4 number-badge w-8 h-8 rounded flex items-center justify-center text-gray-400 font-mono text-xs">03</div>
-<div class="mb-6 w-14 h-14 bg-orange-900 bg-opacity-20 rounded-lg flex items-center justify-center border border-orange-500 border-opacity-30">
-<i class="fas fa-camera-retro text-2xl text-orange-400 icon-glow"></i>
-</div>
-<h3 class="text-xl font-bold text-white mb-3 font-heading">Snapshot Validity</h3>
-<p class="text-gray-400 text-sm leading-relaxed flex-1">
-                    Security is valid only for the specific moment of the scan. Subsequent code updates or newly discovered CVEs may introduce new risks immediately after.
-                </p>
-<div class="mt-4 pt-4 border-t border-gray-700 border-opacity-50 flex items-center text-xs text-orange-400 font-mono">
-<i class="fas fa-arrow-right mr-2"></i> Point-in-Time
+
+                <div class="cyber-card rounded-xl p-6 relative">
+                    <div class="absolute top-4 right-4 number-badge w-8 h-8 rounded flex items-center justify-center text-gray-400 font-mono text-xs">02</div>
+                    <div class="mb-5 w-14 h-14 bg-green-900 bg-opacity-20 rounded-lg flex items-center justify-center border border-green-500 border-opacity-30">
+                        <i class="fas fa-hand-holding-medical text-2xl text-green-400 icon-glow"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2 font-heading">Non-Intrusive</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed flex-1">
+                        Strictly ethical boundaries meant no Denial of Service (DoS) or aggressive brute-force attacks were performed, potentially leaving stress-related bugs unfound.
+                    </p>
+                    <div class="mt-4 pt-3 border-t border-gray-700 border-opacity-50 flex items-center text-xs text-green-400 font-mono">
+                        <i class="fas fa-arrow-right mr-2"></i> Ethical Safety
+                    </div>
                 </div>
+
+                <div class="cyber-card rounded-xl p-6 relative">
+                    <div class="absolute top-4 right-4 number-badge w-8 h-8 rounded flex items-center justify-center text-gray-400 font-mono text-xs">03</div>
+                    <div class="mb-5 w-14 h-14 bg-orange-900 bg-opacity-20 rounded-lg flex items-center justify-center border border-orange-500 border-opacity-30">
+                        <i class="fas fa-camera-retro text-2xl text-orange-400 icon-glow"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2 font-heading">Snapshot Validity</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed flex-1">
+                        Security is valid only for the specific moment of the scan. Subsequent code updates or newly discovered CVEs may introduce new risks immediately after.
+                    </p>
+                    <div class="mt-4 pt-3 border-t border-gray-700 border-opacity-50 flex items-center text-xs text-orange-400 font-mono">
+                        <i class="fas fa-arrow-right mr-2"></i> Point-in-Time
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 z-40"></div>
+
+    </div>
 </div>
-</div>
-</main>
-<!-- Footer Stripe -->
-<div class="h-1 w-full bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500"></div>
+
+<script>
+    function scaleSlide() {
+        const slide = document.getElementById('slide-container');
+        const scaler = document.getElementById('scaler');
+        const targetWidth = 1280;
+        const targetHeight = 720;
+        
+        const winWidth = window.innerWidth;
+        const winHeight = window.innerHeight;
+        
+        const scale = Math.min(winWidth / targetWidth, winHeight / targetHeight);
+        scaler.style.transform = `scale(${scale})`;
+    }
+    
+    window.addEventListener('resize', scaleSlide);
+    window.addEventListener('DOMContentLoaded', scaleSlide);
+</script>
+
 </body>
 </html>

@@ -1,256 +1,297 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Slide 18 - Activity Diagram</title>
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
 <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            overflow: hidden;
-            background-color: #0B1120;
-        }
-        .font-heading {
-            font-family: 'Space Grotesk', sans-serif;
-        }
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
-        }
-        
-        /* Grid Pattern */
-        .bg-grid {
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231e293b' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        }
+    /* 1. Viewport Reset */
+    body {
+        margin: 0;
+        padding: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #050a14;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Inter', sans-serif;
+        overflow: hidden;
+    }
 
-        /* Activity Box Styling */
-        .act-box {
-            background-color: rgba(30, 41, 59, 0.9);
-            border: 2px solid rgba(71, 85, 105, 0.6);
-            backdrop-filter: blur(4px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-            position: absolute;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-radius: 0.75rem;
-            z-index: 20;
-        }
-        .act-box:hover {
-            border-color: rgba(59, 130, 246, 0.6);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-        }
+    /* 2. Scaler Wrapper */
+    #scaler {
+        transform-origin: center center;
+        transition: transform 0.2s ease-out;
+    }
 
-        /* Decision Diamond */
-        .decision-diamond {
-            width: 80px;
-            height: 80px;
-            background-color: rgba(15, 23, 42, 0.95);
-            border: 2px solid rgba(245, 158, 11, 0.6);
-            transform: rotate(45deg);
-            position: absolute;
-            z-index: 20;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-        }
-        .decision-content {
-            transform: rotate(-45deg);
-            text-align: center;
-            width: 100px;
-            pointer-events: none;
-        }
+    /* 3. Fixed Slide Container (1280x720) */
+    #slide-container {
+        position: relative;
+        width: 1280px;
+        height: 720px;
+        background-color: #0B1120;
+        box-shadow: 0 0 100px rgba(0,0,0,0.8);
+        overflow: hidden;
+    }
 
-        /* Start/End Nodes */
-        .circle-node {
-            border-radius: 50%;
-            position: absolute;
-            z-index: 20;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-        }
+    .font-heading { font-family: 'Space Grotesk', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    
+    /* Grid Pattern */
+    .bg-grid {
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231e293b' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        position: absolute; inset: 0; z-index: 0;
+    }
 
-        /* Processing Pulse */
-        @keyframes pulse-border {
-            0% { border-color: rgba(239, 68, 68, 0.4); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-            70% { border-color: rgba(239, 68, 68, 0.8); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
-            100% { border-color: rgba(239, 68, 68, 0.4); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-        }
-        .processing-active {
-            animation: pulse-border 2s infinite;
-        }
+    /* Activity Box Styling */
+    .act-box {
+        background-color: rgba(30, 41, 59, 0.95);
+        border: 2px solid rgba(71, 85, 105, 0.6);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.75rem;
+        z-index: 20;
+        width: 140px;
+        height: 70px;
+    }
+    .act-box:hover {
+        border-color: rgba(59, 130, 246, 0.6);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+    }
 
-        /* Connection Lines */
-        .connections-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 10;
-            pointer-events: none;
-        }
+    /* Decision Diamond */
+    .decision-diamond {
+        width: 60px;
+        height: 60px;
+        background-color: rgba(15, 23, 42, 0.95);
+        border: 2px solid rgba(245, 158, 11, 0.6);
+        transform: rotate(45deg);
+        position: absolute;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    }
 
-        .label-text {
-            background-color: #0B1120;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            color: #94a3b8;
-            font-family: 'JetBrains Mono', monospace;
-        }
-    </style>
+    /* Start/End Nodes */
+    .circle-node {
+        border-radius: 50%;
+        position: absolute;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        width: 36px;
+        height: 36px;
+    }
+
+    /* Processing Pulse */
+    @keyframes pulse-border {
+        0% { border-color: rgba(239, 68, 68, 0.4); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+        70% { border-color: rgba(239, 68, 68, 0.8); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+        100% { border-color: rgba(239, 68, 68, 0.4); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+    .processing-active {
+        animation: pulse-border 2s infinite;
+    }
+
+    /* Connection Lines */
+    .connections-layer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+        pointer-events: none;
+    }
+
+    .label-text {
+        background-color: #0B1120;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        color: #94a3b8;
+        font-family: 'JetBrains Mono', monospace;
+        position: absolute;
+        z-index: 25;
+        border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+</style>
 </head>
-<body class="w-[1280px] h-[720px] text-white bg-grid relative flex flex-col">
-<!-- Header Area -->
-<header class="relative z-30 px-16 pt-12 pb-4 flex justify-between items-end border-b border-gray-800 bg-opacity-90 bg-[#0B1120]">
-<div>
-<div class="flex items-center space-x-2 mb-2">
-<span class="w-2 h-2 bg-blue-500 rounded-full"></span>
-<p class="text-blue-400 text-xs font-mono uppercase tracking-widest">System Workflow</p>
+<body>
+
+<div id="scaler">
+    <div id="slide-container">
+        
+        <div class="bg-grid"></div>
+        <div class="absolute top-0 right-0 w-1/2 h-full bg-blue-900 opacity-10 transform skew-x-12 origin-top-right translate-x-32 z-0"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-purple-900 opacity-10 rounded-full filter blur-3xl z-0"></div>
+
+        <header class="absolute top-0 left-0 w-full px-16 pt-10 pb-4 flex justify-between items-end border-b border-gray-800 bg-opacity-90 bg-[#0B1120] z-30 h-[100px]">
+            <div>
+                <div class="flex items-center space-x-2 mb-1">
+                    <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    <p class="text-blue-400 text-xs font-mono uppercase tracking-widest">System Workflow</p>
+                </div>
+                <h1 class="text-4xl font-heading font-bold text-white">Activity Diagram</h1>
+            </div>
+            <div class="text-right">
+                <p class="text-gray-500 font-mono text-sm">Scan Execution Flow</p>
+            </div>
+        </header>
+
+        <main class="absolute top-0 left-0 w-full h-full z-10">
+            
+            <svg class="connections-layer">
+                <defs>
+                    <marker id="arrowhead" markerHeight="7" markerWidth="10" orient="auto" refX="9" refY="3.5">
+                        <polygon fill="#64748b" points="0 0, 10 3.5, 0 7"></polygon>
+                    </marker>
+                    <marker id="arrowhead-green" markerHeight="7" markerWidth="10" orient="auto" refX="9" refY="3.5">
+                        <polygon fill="#10b981" points="0 0, 10 3.5, 0 7"></polygon>
+                    </marker>
+                    <marker id="arrowhead-red" markerHeight="7" markerWidth="10" orient="auto" refX="9" refY="3.5">
+                        <polygon fill="#ef4444" points="0 0, 10 3.5, 0 7"></polygon>
+                    </marker>
+                </defs>
+
+                <path d="M120 190 L160 190" marker-end="url(#arrowhead)" stroke="#64748b" stroke-width="2"></path>
+                <path d="M300 190 L370 190" marker-end="url(#arrowhead)" stroke="#64748b" stroke-width="2"></path>
+                
+                <path d="M430 190 L500 190" marker-end="url(#arrowhead-green)" stroke="#10b981" stroke-width="2"></path>
+                <path d="M400 160 Q 315 100 230 155" fill="none" marker-end="url(#arrowhead-red)" stroke="#ef4444" stroke-dasharray="4" stroke-width="2"></path>
+
+                <path d="M640 190 L670 190" marker-end="url(#arrowhead)" stroke="#64748b" stroke-width="2"></path>
+                
+                <path d="M810 190 L860 190 L860 360 L890 360" fill="none" marker-end="url(#arrowhead)" stroke="#64748b" stroke-width="2"></path>
+
+                <path d="M890 360 L810 360" marker-end="url(#arrowhead-green)" stroke="#10b981" stroke-width="2"></path>
+                <path d="M920 330 Q 950 250 810 225" fill="none" marker-end="url(#arrowhead-red)" stroke="#ef4444" stroke-dasharray="4" stroke-width="2"></path>
+
+                <path d="M670 360 L640 360" marker-end="url(#arrowhead)" stroke="#64748b" stroke-width="2"></path>
+                <path d="M500 360 L450 360" marker-end="url(#arrowhead)" stroke="#64748b" stroke-width="2"></path>
+
+                <path d="M380 395 L380 495" marker-end="url(#arrowhead)" stroke="#64748b" stroke-width="2"></path>
+                
+                <path d="M450 530 L550 530" marker-end="url(#arrowhead)" stroke="#64748b" stroke-width="2"></path>
+            </svg>
+
+            <div class="label-text text-red-400" style="top: 110px; left: 300px;">Invalid</div>
+            <div class="label-text text-green-400" style="top: 170px; left: 440px;">Success</div>
+            <div class="label-text text-red-400" style="top: 260px; right: 280px;">Invalid URL</div>
+            <div class="label-text text-green-400" style="top: 340px; right: 380px;">Valid</div>
+
+            <div class="circle-node bg-green-500 border-4 border-green-900" style="top: 172px; left: 84px;">
+                <div class="absolute -bottom-6 w-20 text-center text-gray-500 text-[10px] font-mono">Start</div>
+            </div>
+
+            <div class="act-box" style="top: 155px; left: 160px;">
+                <i class="fas fa-sign-in-alt text-blue-400 mb-1"></i>
+                <h3 class="text-white font-bold text-xs">Login</h3>
+            </div>
+
+            <div class="decision-diamond" style="top: 160px; left: 370px;"></div>
+            <div class="absolute z-30 pointer-events-none text-center" style="top: 175px; left: 365px; width: 70px;">
+                <p class="text-amber-400 text-[10px] font-bold leading-tight">Auth<br/>OK?</p>
+            </div>
+
+            <div class="act-box" style="top: 155px; left: 500px;">
+                <i class="fas fa-tachometer-alt text-purple-400 mb-1"></i>
+                <h3 class="text-white font-bold text-xs">Dashboard</h3>
+            </div>
+
+            <div class="act-box" style="top: 155px; left: 670px;">
+                <i class="fas fa-globe text-cyan-400 mb-1"></i>
+                <h3 class="text-white font-bold text-xs">Enter Target</h3>
+            </div>
+
+            <div class="decision-diamond" style="top: 330px; left: 890px;"></div>
+            <div class="absolute z-30 pointer-events-none text-center" style="top: 345px; left: 885px; width: 70px;">
+                <p class="text-amber-400 text-[10px] font-bold leading-tight">Target<br/>Valid?</p>
+            </div>
+
+            <div class="act-box" style="top: 325px; left: 670px;">
+                <i class="fas fa-play text-red-400 mb-1"></i>
+                <h3 class="text-white font-bold text-xs">Run Scan</h3>
+            </div>
+
+            <div class="act-box processing-active border-red-500 w-[140px]" style="top: 325px; left: 500px;">
+                <i class="fas fa-cog fa-spin text-red-500 mb-1"></i>
+                <h3 class="text-white font-bold text-xs">Processing</h3>
+                <p class="text-[9px] text-gray-400 mt-1">Scanning...</p>
+            </div>
+
+            <div class="act-box" style="top: 325px; left: 310px;">
+                <i class="fas fa-list-alt text-yellow-400 mb-1"></i>
+                <h3 class="text-white font-bold text-xs">View Results</h3>
+            </div>
+
+            <div class="act-box" style="top: 495px; left: 310px;">
+                <i class="fas fa-file-pdf text-blue-400 mb-1"></i>
+                <h3 class="text-white font-bold text-xs">Download Report</h3>
+            </div>
+
+            <div class="circle-node border-4 border-gray-600 bg-gray-900" style="top: 512px; left: 552px;">
+                <div class="w-3 h-3 rounded-full bg-gray-500"></div>
+                <div class="absolute -bottom-6 w-20 text-center text-gray-500 text-[10px] font-mono">End</div>
+            </div>
+
+            <div class="absolute bottom-6 right-6 p-4 bg-gray-900 bg-opacity-90 border border-gray-700 rounded-lg w-56 shadow-xl backdrop-filter blur-sm z-50">
+                <h4 class="text-gray-400 text-[10px] font-bold uppercase mb-2 tracking-wider">Legend</h4>
+                <div class="space-y-2">
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 border border-amber-500 transform rotate-45 mr-3 ml-1"></div>
+                        <p class="text-gray-300 text-xs">Decision Point</p>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="w-6 h-0.5 bg-green-500 mr-2"></span>
+                        <p class="text-gray-300 text-xs">Positive Flow</p>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="w-6 h-0.5 border-t border-red-500 border-dashed mr-2"></span>
+                        <p class="text-gray-300 text-xs">Loop / Invalid</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 z-40"></div>
+
+    </div>
 </div>
-<h1 class="text-4xl font-heading font-bold text-white">Activity Diagram</h1>
-</div>
-<div class="text-right">
-<p class="text-gray-500 font-mono text-sm">Scan Execution Flow</p>
-</div>
-</header>
-<!-- Main Content / Diagram Area -->
-<main class="relative z-10 flex flex-1 w-full h-full overflow-hidden bg-[#0B1120]">
-<!-- SVG Connections Layer -->
-<svg class="connections-layer">
-<defs>
-<marker id="arrowhead" markerheight="7" markerwidth="10" orient="auto" refx="9" refy="3.5">
-<polygon fill="#64748b" points="0 0, 10 3.5, 0 7"></polygon>
-</marker>
-</defs>
-<!-- Row 1 Connections -->
-<!-- Start -> Login -->
-<path d="M 130 180 L 190 180" marker-end="url(#arrowhead)" stroke="#64748b" stroke-width="2"></path>
-<!-- Login -> Auth Decision -->
-<path d="M 330 180 L 410 180" marker-end="url(#arrowhead)" stroke="#64748b" stroke-width="2"></path>
-<!-- Auth(No) -> Login (Loop) -->
-<path d="M 450 140 Q 350 80 260 140" fill="none" marker-end="url(#arrowhead)" stroke="#ef4444" stroke-dasharray="4" stroke-width="2"></path>
-<!-- Auth(Yes) -> Dashboard -->
-<path d="M 490 180 L 610 180" marker-end="url(#arrowhead)" stroke="#10b981" stroke-width="2"></path>
-<!-- Dashboard -> Enter Target -->
-<path d="M 750 180 L 890 180" marker-end="url(#arrowhead)" stroke="#64748b" stroke-width="2"></path>
-<!-- Row 1 to Row 2 Transition -->
-<!-- Enter Target -> Valid? (Down) -->
-<path d="M 960 220 L 960 360" marker-end="url(#arrowhead)" stroke="#64748b" stroke-width="2"></path>
-<!-- Row 2 Connections (Right to Left) -->
-<!-- Valid(No) -> Enter Target (Loop Right) -->
-<path d="M 1000 400 Q 1100 300 1030 220" fill="none" marker-end="url(#arrowhead)" stroke="#ef4444" stroke-dasharray="4" stroke-width="2"></path>
-<!-- Valid(Yes) -> Run Scan -->
-<path d="M 920 400 L 750 400" marker-end="url(#arrowhead)" stroke="#10b981" stroke-width="2"></path>
-<!-- Run Scan -> Processing -->
-<path d="M 610 400 L 530 400" marker-end="url(#arrowhead)" stroke="#64748b" stroke-width="2"></path>
-<!-- Processing -> View Results -->
-<path d="M 370 400 L 330 400" marker-end="url(#arrowhead)" stroke="#64748b" stroke-width="2"></path>
-<!-- Row 2 to Row 3 Transition -->
-<!-- View Results -> Download Report (Down) -->
-<path d="M 260 440 L 260 540" marker-end="url(#arrowhead)" stroke="#64748b" stroke-width="2"></path>
-<!-- Row 3 Connections -->
-<!-- Download Report -> End -->
-<path d="M 330 580 L 420 580" marker-end="url(#arrowhead)" stroke="#64748b" stroke-width="2"></path>
-</svg>
-<!-- Labels for Decisions -->
-<div class="absolute top-[100px] left-[350px] label-text text-red-400">Invalid Creds</div>
-<div class="absolute top-[160px] left-[520px] label-text text-green-400">Success</div>
-<div class="absolute top-[290px] right-[210px] label-text text-red-400">Invalid URL</div>
-<div class="absolute top-[380px] right-[370px] label-text text-green-400">Valid</div>
-<!-- Diagram Nodes -->
-<div class="relative w-full h-full">
-<!-- 1. Start Node -->
-<div class="circle-node bg-green-500 border-4 border-green-900" style="top: 160px; left: 90px; width: 40px; height: 40px;">
-<div class="absolute -bottom-8 w-20 text-center text-gray-400 text-xs font-mono">Start</div>
-</div>
-<!-- 2. Login -->
-<div class="act-box" style="top: 140px; left: 190px; width: 140px; height: 80px;">
-<i class="fas fa-sign-in-alt text-blue-400 mb-2"></i>
-<h3 class="text-white font-bold text-sm">Login</h3>
-</div>
-<!-- 3. Decision: Auth OK? -->
-<div class="decision-diamond" style="top: 140px; left: 410px;"></div>
-<!-- Decision Text (Not rotated) -->
-<div class="absolute z-30 pointer-events-none text-center" style="top: 168px; left: 415px; width: 70px;">
-<p class="text-amber-400 text-[10px] font-bold leading-tight">Auth<br/>OK?</p>
-</div>
-<!-- 4. Dashboard -->
-<div class="act-box" style="top: 140px; left: 610px; width: 140px; height: 80px;">
-<i class="fas fa-tachometer-alt text-purple-400 mb-2"></i>
-<h3 class="text-white font-bold text-sm">Dashboard</h3>
-</div>
-<!-- 5. Enter Target -->
-<div class="act-box" style="top: 140px; left: 890px; width: 140px; height: 80px;">
-<i class="fas fa-globe text-cyan-400 mb-2"></i>
-<h3 class="text-white font-bold text-sm">Enter Target</h3>
-</div>
-<!-- 6. Decision: Target Valid? (Row 2, aligned under Enter Target) -->
-<div class="decision-diamond" style="top: 360px; left: 920px;"></div>
-<div class="absolute z-30 pointer-events-none text-center" style="top: 388px; left: 925px; width: 70px;">
-<p class="text-amber-400 text-[10px] font-bold leading-tight">Target<br/>Valid?</p>
-</div>
-<!-- 7. Run Scan -->
-<div class="act-box" style="top: 360px; left: 610px; width: 140px; height: 80px;">
-<i class="fas fa-play text-red-400 mb-2"></i>
-<h3 class="text-white font-bold text-sm">Run Scan</h3>
-</div>
-<!-- 8. Processing -->
-<div class="act-box processing-active border-red-500" style="top: 360px; left: 370px; width: 160px; height: 80px;">
-<i class="fas fa-cog fa-spin text-red-500 mb-2"></i>
-<h3 class="text-white font-bold text-sm">Processing</h3>
-<p class="text-[10px] text-gray-400">Scanning...</p>
-</div>
-<!-- 9. View Results -->
-<div class="act-box" style="top: 360px; left: 190px; width: 140px; height: 80px;">
-<i class="fas fa-list-alt text-yellow-400 mb-2"></i>
-<h3 class="text-white font-bold text-sm">View Results</h3>
-</div>
-<!-- 10. Download Report -->
-<div class="act-box" style="top: 540px; left: 190px; width: 140px; height: 80px;">
-<i class="fas fa-file-pdf text-blue-400 mb-2"></i>
-<h3 class="text-white font-bold text-sm">Download Report</h3>
-</div>
-<!-- 11. End Node -->
-<div class="circle-node border-4 border-gray-600 bg-gray-900" style="top: 560px; left: 420px; width: 40px; height: 40px;">
-<div class="w-4 h-4 rounded-full bg-gray-500"></div>
-<div class="absolute -bottom-8 w-20 text-center text-gray-400 text-xs font-mono">End</div>
-</div>
-<!-- Legend -->
-<div class="absolute bottom-6 right-6 p-4 bg-gray-900 bg-opacity-80 border border-gray-700 rounded-lg w-64">
-<h4 class="text-gray-400 text-xs font-bold uppercase mb-2">Legend</h4>
-<div class="space-y-2">
-<div class="flex items-center">
-<div class="w-4 h-4 border border-gray-500 rounded mr-2 bg-slate-800"></div>
-<p class="text-gray-300 text-xs">Action / State</p>
-</div>
-<div class="flex items-center">
-<div class="w-3 h-3 border border-amber-500 transform rotate-45 mr-2 ml-0.5"></div>
-<p class="text-gray-300 text-xs ml-1">Decision Point</p>
-</div>
-<div class="flex items-center">
-<span class="w-6 h-0.5 bg-green-500 mr-2"></span>
-<p class="text-gray-300 text-xs">Positive Flow</p>
-</div>
-<div class="flex items-center">
-<span class="w-6 h-0.5 border-t border-red-500 border-dashed mr-2"></span>
-<p class="text-gray-300 text-xs">Negative / Loop</p>
-</div>
-</div>
-</div>
-</div>
-</main>
-<!-- Footer Stripe -->
-<div class="h-1 w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
+
+<script>
+    function scaleSlide() {
+        const slide = document.getElementById('slide-container');
+        const scaler = document.getElementById('scaler');
+        const targetWidth = 1280;
+        const targetHeight = 720;
+        
+        const winWidth = window.innerWidth;
+        const winHeight = window.innerHeight;
+        
+        const scale = Math.min(winWidth / targetWidth, winHeight / targetHeight);
+        scaler.style.transform = `scale(${scale})`;
+    }
+    
+    window.addEventListener('resize', scaleSlide);
+    window.addEventListener('DOMContentLoaded', scaleSlide);
+</script>
+
 </body>
 </html>

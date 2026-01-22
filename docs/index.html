@@ -2,15 +2,47 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Slide Viewer</title>
+<title>Security Audit & Testing | Mahendra Mali - SPCE 2026</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+<meta name="description" content="Comprehensive Security Audit and Software Testing project (MCA 2026) by Mahendra Mali. Features OWASP Top 10 analysis, Kali Linux, Nmap, and Burp Suite methodologies.">
+<meta name="keywords" content="Security Audit, Penetration Testing, OWASP Top 10, Kali Linux, Nmap, Burp Suite, Software Security, MCA Project 2026, Rosix Technology, SPCE Visnagar">
+<meta name="author" content="Mahendra Mali">
+<meta name="robots" content="index, follow">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mahendraplus.github.io/ppt/">
+<meta property="og:title" content="Security Audit & Testing Project - Mahendra Mali">
+<meta property="og:description" content="An in-depth look into software vulnerability assessment and security auditing practices.">
+<meta property="og:image" content="https://mahendraplus.github.io/ppt/assets/img/banner.jpg">
+
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:title" content="Security Audit & Testing Project">
+<meta property="twitter:description" content="Cybersecurity project: Vulnerability scanning and reporting.">
+<meta property="twitter:image" content="https://mahendraplus.github.io/ppt/assets/img/banner.jpg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "Security Audit & Testing System",
+  "author": {
+    "@type": "Person",
+    "name": "Mahendra Mali"
+  },
+  "programmingLanguage": "Python, HTML, JavaScript",
+  "description": "A tool for automated vulnerability scanning and security reporting using Kali Linux tools.",
+  "educationalUse": "MCA Final Year Project"
+}
+</script>
+
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
 <style>
-    /* Prevent selection and scrolling */
-    body { user-select: none; -webkit-user-select: none; overflow: hidden; background-color: #000; }
+    /* Core Viewer Styles */
+    body { user-select: none; -webkit-user-select: none; overflow: hidden; background-color: #000; font-family: 'Inter', sans-serif; }
     
-    /* Smooth scaling container */
     #slideContainer {
         transform-origin: center center;
         transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -18,15 +50,13 @@
         height: 720px;
         position: absolute;
         top: 50%; left: 50%;
-        margin-left: -640px; /* Half of width */
-        margin-top: -360px; /* Half of height */
+        margin-left: -640px;
+        margin-top: -360px;
     }
 
-    /* UI Transitions */
     .ui-element { transition: opacity 0.4s ease, transform 0.3s ease; }
     .ui-hidden { opacity: 0; pointer-events: none; }
     
-    /* Loading Spinner */
     .loader {
         border: 4px solid rgba(255,255,255,0.1);
         border-left-color: #6366f1;
@@ -36,16 +66,21 @@
     }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* Custom Range Slider */
-    input[type=range] {
-        -webkit-appearance: none; background: transparent; width: 100px;
-    }
-    input[type=range]::-webkit-slider-thumb {
-        -webkit-appearance: none; height: 12px; width: 12px; border-radius: 50%;
-        background: #6366f1; cursor: pointer; margin-top: -4px;
-    }
-    input[type=range]::-webkit-slider-runnable-track {
-        width: 100%; height: 4px; cursor: pointer; background: rgba(255,255,255,0.2); border-radius: 2px;
+    input[type=range] { -webkit-appearance: none; background: transparent; width: 100px; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 12px; width: 12px; border-radius: 50%; background: #6366f1; cursor: pointer; margin-top: -4px; }
+    input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: rgba(255,255,255,0.2); border-radius: 2px; }
+
+    /* SEO Content Hidden from User but Visible to Bots */
+    .seo-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
     }
 </style>
 </head>
@@ -55,7 +90,7 @@
 <div id="loadingOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-black transition-opacity duration-500">
     <div class="flex flex-col items-center">
         <div class="loader mb-4"></div>
-        <p class="text-sm font-mono text-indigo-400">Initializing...</p>
+        <p class="text-sm font-mono text-indigo-400">Initializing Security Module...</p>
     </div>
 </div>
 
@@ -70,59 +105,82 @@
 
     <div id="topBar" class="ui-element absolute top-0 left-0 w-full p-4 flex justify-between items-center z-40 bg-gradient-to-b from-black/80 to-transparent pointer-events-none">
         <div class="pointer-events-auto px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-xs font-mono border border-white/10">
-            <span class="text-indigo-400">SLIDE:</span> <span id="counter">0 / 0</span>
+            <span class="text-indigo-400">SLIDE:</span> <span id="counter">1 / 27</span>
         </div>
         <div class="pointer-events-auto flex gap-2">
-            <button id="reloadBtn" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md flex items-center justify-center text-white/80 transition-colors" title="Reload Slide">
-                <i class="fas fa-rotate-right text-xs"></i>
-            </button>
-            <button id="fsBtn" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md flex items-center justify-center text-white/80 transition-colors" title="Fullscreen">
-                <i class="fas fa-expand text-xs"></i>
-            </button>
+            <button id="reloadBtn" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md flex items-center justify-center text-white/80 transition-colors" title="Reload Slide"><i class="fas fa-rotate-right text-xs"></i></button>
+            <button id="fsBtn" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md flex items-center justify-center text-white/80 transition-colors" title="Fullscreen"><i class="fas fa-expand text-xs"></i></button>
         </div>
     </div>
 
     <div id="bottomBar" class="ui-element absolute bottom-6 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-2 group">
-        
         <div class="flex items-center gap-1 px-2 py-2 rounded-2xl bg-black/60 backdrop-blur-xl border border-white/10 shadow-2xl transition-all hover:bg-black/80">
-            
-            <button id="firstBtn" class="w-10 h-10 rounded-xl hover:bg-white/10 text-white/70 hover:text-white transition-all" title="First Slide">
-                <i class="fas fa-angles-left"></i>
-            </button>
-            <button id="prevBtn" class="w-12 h-10 rounded-xl hover:bg-white/10 text-white transition-all" title="Previous">
-                <i class="fas fa-chevron-left text-lg"></i>
-            </button>
-
+            <button id="firstBtn" class="w-10 h-10 rounded-xl hover:bg-white/10 text-white/70 hover:text-white transition-all"><i class="fas fa-angles-left"></i></button>
+            <button id="prevBtn" class="w-12 h-10 rounded-xl hover:bg-white/10 text-white transition-all"><i class="fas fa-chevron-left text-lg"></i></button>
             <div class="w-px h-6 bg-white/20 mx-1"></div>
-
-            <button id="playBtn" class="w-14 h-10 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/30 transition-all flex items-center justify-center gap-2" title="Play Slideshow">
-                <i class="fas fa-play text-sm"></i>
-            </button>
-
+            <button id="playBtn" class="w-14 h-10 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/30 transition-all flex items-center justify-center gap-2"><i class="fas fa-play text-sm"></i></button>
             <div class="w-px h-6 bg-white/20 mx-1"></div>
-
-            <button id="nextBtn" class="w-12 h-10 rounded-xl hover:bg-white/10 text-white transition-all" title="Next">
-                <i class="fas fa-chevron-right text-lg"></i>
-            </button>
-            <button id="lastBtn" class="w-10 h-10 rounded-xl hover:bg-white/10 text-white/70 hover:text-white transition-all" title="Last Slide">
-                <i class="fas fa-angles-right"></i>
-            </button>
+            <button id="nextBtn" class="w-12 h-10 rounded-xl hover:bg-white/10 text-white transition-all"><i class="fas fa-chevron-right text-lg"></i></button>
+            <button id="lastBtn" class="w-10 h-10 rounded-xl hover:bg-white/10 text-white/70 hover:text-white transition-all"><i class="fas fa-angles-right"></i></button>
         </div>
-
+        
         <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-3 px-4 py-2 rounded-full bg-black/40 backdrop-blur-md border border-white/5 text-xs">
             <span class="text-white/50"><i class="fas fa-stopwatch mr-1"></i>Speed</span>
             <input id="speedRange" type="range" min="1000" max="10000" step="500" value="3000">
             <span id="speedDisplay" class="text-white/80 w-8 text-right">3s</span>
         </div>
-
     </div>
 
     <div id="mobileHint" class="absolute inset-0 flex items-center justify-between px-4 pointer-events-none opacity-0 transition-opacity duration-1000 z-30">
         <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center animate-pulse"><i class="fas fa-chevron-left"></i></div>
         <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center animate-pulse"><i class="fas fa-chevron-right"></i></div>
     </div>
-
 </div>
+
+<main class="seo-hidden">
+    <article>
+        <h1>Security Audit & Testing of Softwares</h1>
+        <p>Student: MALI MAHENDRAKUMAR RAMESHBHAI | SPCE Visnagar</p>
+        <p>Industry Partner: Rosix Technology Pvt. Ltd.</p>
+        
+        <section>
+            <h2>Project Overview</h2>
+            <p>In today’s digital era, software systems handle sensitive data. Security Audit & Testing helps in identifying vulnerabilities before attackers exploit them. This project focuses on analyzing software systems using Kali Linux, Nmap, and OWASP ZAP.</p>
+        </section>
+
+        <section>
+            <h2>Tools & Technologies</h2>
+            <ul>
+                <li>Operating System: Kali Linux</li>
+                <li>Nmap (Network Scanning)</li>
+                <li>OWASP ZAP (Vulnerability Scanning)</li>
+                <li>Burp Suite (Proxy Testing)</li>
+                <li>Python & HTML5</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Methodology</h2>
+            <ol>
+                <li>Requirement Analysis</li>
+                <li>Target Identification</li>
+                <li>Vulnerability Scanning</li>
+                <li>Risk Classification</li>
+                <li>Report Generation</li>
+            </ol>
+        </section>
+
+        <section>
+            <h2>System Architecture</h2>
+            <p>User -> Security Audit System -> Security Tools -> Analysis Engine -> Report Generator</p>
+        </section>
+
+        <section>
+            <h2>Vulnerability Findings</h2>
+            <p>The project successfully identified open ports, weak authentication mechanisms, and OWASP Top 10 vulnerabilities. Structured reports were generated with severity classifications (High, Medium, Low).</p>
+        </section>
+    </article>
+</main>
 
 <script>
 /**
@@ -131,13 +189,14 @@
 const CONFIG = {
     baseWidth: 1280,
     baseHeight: 720,
-    basePath: "/ppt/assets/html/",
+    basePath: "/../../assets/html/",
+    totalSlides: 29,
     idleTime: 3000
 };
 
 let state = {
     current: 1,
-    total: 0,
+    total: CONFIG.totalSlides,
     isPlaying: false,
     interval: null,
     scale: 1,
@@ -154,7 +213,6 @@ const els = {
     ui: document.querySelectorAll('.ui-element'),
     counter: document.getElementById('counter'),
     playBtn: document.getElementById('playBtn'),
-    playIcon: document.querySelector('#playBtn i'),
     speedInput: document.getElementById('speedRange'),
     speedDisplay: document.getElementById('speedDisplay')
 };
@@ -165,66 +223,43 @@ let bufferFrame = els.frameB;
 /**
  * Initialization Logic
  */
-async function init() {
+function init() {
     autoScale();
     window.addEventListener('resize', autoScale);
     
-    // Detect slides (Head request loop)
-    await countSlides();
-    
-    if (state.total > 0) {
-        loadSlide(1);
-        setTimeout(() => {
-            els.loader.classList.add('opacity-0', 'pointer-events-none');
-            // Show mobile hints briefly
-            if(window.innerWidth < 768) {
-                const hint = document.getElementById('mobileHint');
-                hint.classList.remove('opacity-0');
-                setTimeout(() => hint.classList.add('opacity-0'), 2000);
-            }
-        }, 800);
-    } else {
-        els.loader.innerHTML = '<p class="text-red-500">No slides found.</p>';
-    }
+    // Immediate load since we know the count
+    loadSlide(1);
+    updateCounter();
+
+    setTimeout(() => {
+        els.loader.classList.add('opacity-0', 'pointer-events-none');
+        // Mobile Hint Logic
+        if(window.innerWidth < 768) {
+            const hint = document.getElementById('mobileHint');
+            hint.classList.remove('opacity-0');
+            setTimeout(() => hint.classList.add('opacity-0'), 2000);
+        }
+    }, 800);
 
     setupInteractions();
     resetIdleTimer();
 }
 
-/**
- * Core Slide Logic
- */
-async function countSlides() {
-    let i = 1;
-    // In a real scenario, you might want to fetch a manifest.json
-    // For now, we probe until 404
-    while (true) {
-        try {
-            const res = await fetch(CONFIG.basePath + i + ".html", { method: 'HEAD' });
-            if (!res.ok) break;
-            i++;
-        } catch (e) { break; }
-    }
-    state.total = i - 1;
-    updateCounter();
-}
-
 function getSlideUrl(index) {
+    // Falls back to a 404 handler in a real server, here simply constructs string
     return `${CONFIG.basePath}${index}.html`;
 }
 
 function loadSlide(index) {
     if (index < 1 || index > state.total) return;
     
-    // Prepare buffer
     bufferFrame.src = getSlideUrl(index);
     
+    // Simple load handler
     bufferFrame.onload = () => {
-        // Swap Frames
         bufferFrame.classList.remove('opacity-0');
         activeFrame.classList.add('opacity-0');
         
-        // Update references
         const temp = activeFrame;
         activeFrame = bufferFrame;
         bufferFrame = temp;
@@ -233,10 +268,14 @@ function loadSlide(index) {
         updateCounter();
         preloadNext();
     };
+    
+    // Error handling if file missing
+    bufferFrame.onerror = () => {
+        console.error("Slide missing:", index);
+    };
 }
 
 function preloadNext() {
-    // Preload next 2 slides using invisible links
     for(let i=1; i<=2; i++) {
         const nextIdx = state.current + i;
         if(nextIdx <= state.total) {
@@ -251,7 +290,7 @@ function preloadNext() {
 function navigate(direction) {
     let next = state.current + direction;
     if (next > state.total) {
-        if (state.isPlaying) togglePlay(); // Stop at end
+        if (state.isPlaying) togglePlay(); 
         return;
     }
     if (next < 1) return;
@@ -264,15 +303,9 @@ function navigate(direction) {
 function autoScale() {
     const windowRatio = window.innerWidth / window.innerHeight;
     const targetRatio = CONFIG.baseWidth / CONFIG.baseHeight;
-    
-    let scale;
-    if (windowRatio > targetRatio) {
-        // Window is wider than slide (fit height)
-        scale = window.innerHeight / CONFIG.baseHeight;
-    } else {
-        // Window is narrower (fit width)
-        scale = window.innerWidth / CONFIG.baseWidth;
-    }
+    let scale = windowRatio > targetRatio 
+        ? window.innerHeight / CONFIG.baseHeight 
+        : window.innerWidth / CONFIG.baseWidth;
     
     state.scale = scale;
     els.container.style.transform = `scale(${scale})`;
@@ -284,13 +317,14 @@ function updateCounter() {
 
 function togglePlay() {
     state.isPlaying = !state.isPlaying;
+    const icon = els.playBtn.querySelector('i');
     
     if (state.isPlaying) {
-        els.playBtn.innerHTML = '<i class="fas fa-pause text-sm"></i>';
+        icon.className = 'fas fa-pause text-sm';
         els.playBtn.classList.replace('bg-indigo-600', 'bg-red-600');
         state.interval = setInterval(() => navigate(1), parseInt(els.speedInput.value));
     } else {
-        els.playBtn.innerHTML = '<i class="fas fa-play text-sm"></i>';
+        icon.className = 'fas fa-play text-sm';
         els.playBtn.classList.replace('bg-red-600', 'bg-indigo-600');
         clearInterval(state.interval);
     }
@@ -300,7 +334,6 @@ function togglePlay() {
  * Interaction Handlers
  */
 function setupInteractions() {
-    // Buttons
     document.getElementById('nextBtn').onclick = () => navigate(1);
     document.getElementById('prevBtn').onclick = () => navigate(-1);
     document.getElementById('firstBtn').onclick = () => loadSlide(1);
@@ -309,13 +342,11 @@ function setupInteractions() {
     
     els.playBtn.onclick = togglePlay;
     
-    // Fullscreen
     document.getElementById('fsBtn').onclick = () => {
         if (!document.fullscreenElement) document.body.requestFullscreen();
         else document.exitFullscreen();
     };
 
-    // Speed Slider
     els.speedInput.oninput = (e) => {
         els.speedDisplay.innerText = (e.target.value / 1000) + 's';
         if (state.isPlaying) {
@@ -324,7 +355,6 @@ function setupInteractions() {
         }
     };
 
-    // Keyboard
     document.addEventListener('keydown', (e) => {
         resetIdleTimer();
         if (e.key === 'ArrowRight' || e.key === ' ') navigate(1);
@@ -332,22 +362,16 @@ function setupInteractions() {
         if (e.key === 'f') document.getElementById('fsBtn').click();
     });
 
-    // Touch Swiping
+    // Touch Handling
     let touchStartX = 0;
     const touchLayer = document.getElementById('touchLayer');
-    
-    touchLayer.addEventListener('touchstart', e => {
-        touchStartX = e.changedTouches[0].screenX;
-        resetIdleTimer();
-    }, {passive: true});
-
+    touchLayer.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; resetIdleTimer(); }, {passive: true});
     touchLayer.addEventListener('touchend', e => {
         const touchEndX = e.changedTouches[0].screenX;
-        if (touchStartX - touchEndX > 50) navigate(1); // Swipe Left -> Next
-        if (touchEndX - touchStartX > 50) navigate(-1); // Swipe Right -> Prev
+        if (touchStartX - touchEndX > 50) navigate(1);
+        if (touchEndX - touchStartX > 50) navigate(-1);
     }, {passive: true});
 
-    // Idle Auto-Hide UI
     document.addEventListener('mousemove', resetIdleTimer);
     document.addEventListener('click', resetIdleTimer);
 }
@@ -355,16 +379,15 @@ function setupInteractions() {
 function resetIdleTimer() {
     els.ui.forEach(el => el.classList.remove('ui-hidden'));
     document.body.style.cursor = 'default';
-    
     clearTimeout(state.idleTimer);
     state.idleTimer = setTimeout(() => {
-        if (!state.isPlaying) return; // Only hide if playing or user wants immersion
+        if (!state.isPlaying) return;
         els.ui.forEach(el => el.classList.add('ui-hidden'));
         document.body.style.cursor = 'none';
     }, CONFIG.idleTime);
 }
 
-// Start
+// Boot the system
 init();
 
 </script>
